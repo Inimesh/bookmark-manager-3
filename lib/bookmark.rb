@@ -31,7 +31,14 @@ class Bookmark
       connection = PG.connect(dbname: 'bookmark_manager')
     end
 
-    result = connection.exec("INSERT INTO bookmarks (url, title) VALUES ('#{url}', '#{title}') RETURNING id, title, url;") # Add new bookmark data to database
+    result = connection.exec_params(
+      # First argument is an SQL query template
+      # Second argument is the 'params'
+      # $1 refers to the first item in the params array
+      # $2 refers to the second item in the params array
+      "INSERT INTO bookmarks (url, title) VALUES ($1, $2) RETURNING id, title, url;",
+      [url, title]
+    ) # Add new bookmark data to database
     return Bookmark.new(id: result.first['id'], title: result.first['title'] , url: result.first['url']) # Return our new bookmark data in a Bookmark instance (more useful for testing)
   end
 end
