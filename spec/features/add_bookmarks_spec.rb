@@ -2,7 +2,7 @@ feature 'adds bookmarks' do
   scenario 'user can add a bookmark' do
     connection = PG.connect(dbname: 'bookmark_manager_test')
 
-    visit('/')
+    visit('/bookmarks')
     fill_in('url', with: 'www.google.com')
     fill_in('title', with: 'Google' )
     click_on('Submit')
