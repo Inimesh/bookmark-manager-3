@@ -1,11 +1,12 @@
 feature 'adds bookmarks' do
-  scenario 'enter a web address and submit' do
+  scenario 'user can add a bookmark' do
     connection = PG.connect(dbname: 'bookmark_manager_test')
 
     visit('/')
-    fill_in('new_bookmark', :with => 'www.google.com')
+    fill_in('url', with: 'www.google.com')
+    fill_in('title', with: 'Google' )
     click_on('Submit')
 
-    expect(page).to have_content('www.google.com')
+    expect(page).to have_link('Google', href: 'www.google.com')
   end
 end
