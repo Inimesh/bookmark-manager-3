@@ -3,13 +3,12 @@ require 'database_helpers'
 
 describe Bookmark do
   describe '.all' do
-    it 'should return a list of the bookmark instnaces' do
-      connection = PG.connect(dbname: 'bookmark_manager_test')
-  
+    it 'should return a list of the bookmark instances' do
+      # connection = PG.connect(dbname: 'bookmark_manager_test')
       bookmark = Bookmark.add_bookmark(url: 'http://www.makersacademy.com/', title: 'Makers Academy')
       Bookmark.add_bookmark(url: 'http://www.google.com/', title: 'google')
       Bookmark.add_bookmark(url: 'http://www.destroyallsoftware.com', title: 'Destroy All Software')
-
+      
       bookmarks = Bookmark.all
 
       expect(bookmarks.length).to eq 3

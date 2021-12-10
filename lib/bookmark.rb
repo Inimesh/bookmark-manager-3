@@ -1,4 +1,5 @@
 require 'pg'
+require_relative 'database_connection'
 
 class Bookmark 
   
@@ -12,30 +13,14 @@ class Bookmark
   end
 
   def self.all
-    if ENV['ENVIRONMENT'] == 'test'
-      connection = PG.connect(dbname: 'bookmark_manager_test')
-    else
-      connection = PG.connect(dbname: 'bookmark_manager')
-    end
-    
-    result = connection.exec("SELECT * FROM bookmarks;") # Retrieve all bookmark data from database
+    result = DatabaseConnection.query("SELECT * FROM bookmarks;")
     return result.map { |bookmark| 
       Bookmark.new(id: bookmark['id'], title: bookmark['title'], url: bookmark['url']) 
     } # Return an array of bookmark objects
   end
 
   def self.add_bookmark(url:, title:)
-    if ENV['ENVIRONMENT'] == 'test'
-      connection = PG.connect(dbname: 'bookmark_manager_test')
-    else
-      connection = PG.connect(dbname: 'bookmark_manager')
-    end
-
-    result = connection.exec_params(
-      # First argument is an SQL query template
-      # Second argument is the 'params'
-      # $1 refers to the first item in the params array
-      # $2 refers to the second item in the params array
+      result = DatabaseConnection.query(
       "INSERT INTO bookmarks (url, title) VALUES ($1, $2) RETURNING id, title, url;",
       [url, title]
     ) # Add new bookmark data to database
@@ -43,13 +28,7 @@ class Bookmark
   end
 
   def self.delete_bookmark(id:)
-    if ENV['ENVIRONMENT'] == 'test'
-      connection = PG.connect(dbname: 'bookmark_manager_test')
-    else
-      connection = PG.connect(dbname: 'bookmark_manager')
-    end
-
-    connection.exec_params("DELETE FROM bookmarks WHERE id = $1", [id])
+    return DatabaseConnection.query("DELETE FROM bookmarks WHERE id = $1", [id])
   end
   
 end
