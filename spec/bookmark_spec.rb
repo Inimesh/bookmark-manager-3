@@ -33,4 +33,14 @@ describe Bookmark do
 
     end
   end
+
+  describe '.delete_bookmark' do
+    it 'deletes the specified bookmark' do
+      bookmark = Bookmark.add_bookmark(title: 'Example', url: 'https://www.example.com')
+
+      Bookmark.delete_bookmark(id: bookmark.id)
+
+      expect(Bookmark.all.length).to eq 0
+    end
+  end
 end 

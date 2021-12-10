@@ -41,4 +41,15 @@ class Bookmark
     ) # Add new bookmark data to database
     return Bookmark.new(id: result.first['id'], title: result.first['title'] , url: result.first['url']) # Return our new bookmark data in a Bookmark instance (more useful for testing)
   end
+
+  def self.delete_bookmark(id:)
+    if ENV['ENVIRONMENT'] == 'test'
+      connection = PG.connect(dbname: 'bookmark_manager_test')
+    else
+      connection = PG.connect(dbname: 'bookmark_manager')
+    end
+
+    connection.exec_params("DELETE FROM bookmarks WHERE id = $1", [id])
+  end
+  
 end
